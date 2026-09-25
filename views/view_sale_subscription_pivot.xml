@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="sale_subscription_pivot_view" model="ir.ui.view">
+            <field name="name">sale.subscription.pivot.view</field>
+            <field name="model">sale.subscription</field>
+            <field name="arch" type="xml">
+                <pivot string="Subscription Analysis" sample="1">
+                    <field name="partner_id" type="row" />
+                    <field name="date_start" type="col" />
+                    <field name="recurring_amount" type="measure" />
+                </pivot>
+            </field>
+        </record>
+    </data>
+</odoo>

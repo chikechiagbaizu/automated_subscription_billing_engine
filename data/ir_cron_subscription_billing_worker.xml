@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="ir_cron_subscription_billing_worker" model="ir.cron">
+            <field name="name">Subscription Billing Engine: Daily Recurring Invoice Generation</field>
+            <field name="model_id" ref="model_sale_subscription" />
+            <field name="state">code</field>
+            <field name="code">model.cron_recurring_billing_routine()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active">True</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="sale_subscription_graph_view" model="ir.ui.view">
+            <field name="name">sale.subscription.graph.view</field>
+            <field name="model">sale.subscription</field>
+            <field name="arch" type="xml">
+                <graph string="Subscription Trends" type="line" sample="1">
+                    <field name="date_start" type="row" />
+                    <field name="recurring_amount" type="measure" />
+                </graph>
+            </field>
+        </record>
+    </data>
+</odoo>

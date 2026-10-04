@@ -13,7 +13,9 @@
         'sale',
     ],
     'data': [
+        'security/billing_subscription_groups.xml',
+        'security/ir.model.access.csv',
         'views/view_billing_subscription_pivot.xml',
-        'views/view_billing_subscription_graph.xml'
+        'views/view_billing_subscription_graph.xml',
     ],
 }

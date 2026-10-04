@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <!-- Module Category -->
+        <record id="module_category_billing_subscription" model="ir.module.category">
+            <field name="name">Billing Subscription</field>
+            <field name="description">Billing and Subscription Management</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <!-- Privilege -->
+        <record id="billing_subscription_privilege" model="res.groups.privilege">
+            <field name="name">Billing Subscription</field>
+            <field name="category_id" ref="module_category_billing_subscription" />
+        </record>
+
+        <!-- Billing Manager -->
+        <record id="billing_subscription_manager_group" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="privilege_id" ref="billing_subscription_privilege" />
+        </record>
+
+        <!-- Billing User -->
+        <record id="billing_subscription_user_group" model="res.groups">
+            <field name="name">User</field>
+            <field name="privilege_id" ref="billing_subscription_privilege" />
+        </record>
+    </data>
+</odoo>

@@ -12,5 +12,8 @@
         'base',
         'sale',
     ],
-    'data': [],
+    'data': [
+        'views/view_billing_subscription_pivot.xml',
+        'views/view_billing_subscription_graph.xml'
+    ],
 }

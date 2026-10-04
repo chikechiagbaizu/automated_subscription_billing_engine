@@ -3,8 +3,8 @@
 <odoo>
     <data>
         <record id="sale_subscription_graph_view" model="ir.ui.view">
-            <field name="name">sale.subscription.graph.view</field>
-            <field name="model">sale.subscription</field>
+            <field name="name">billing.subscription.graph.view</field>
+            <field name="model">billing.subscription</field>
             <field name="arch" type="xml">
                 <graph string="Subscription Trends" type="line" sample="1">
                     <field name="date_start" type="row" />

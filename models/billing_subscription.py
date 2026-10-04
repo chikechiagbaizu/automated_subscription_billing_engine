@@ -1,8 +1,8 @@
 from odoo import models, fields, Command
 
-class SaleSubscription(models.Model):
-    _name = 'sale.subscription'
-    _description = 'Sale Subscription'
+class BillingSubscription(models.Model):
+    _name = 'billing.subscription'
+    _description = 'Billing Subscription'
 
     name = fields.Char(string='Subscription ID', required=True)
     partner_id = fields.Many2one(comodel_name="res.partner", string='Partner ID', required=True)
@@ -13,9 +13,11 @@ class SaleSubscription(models.Model):
         ('active','Active'),
         ('closed','Closed'),
     ], default='draft', string='Stage')
+    next_invoice_date = fields.Date(string='Next Invoice Date')
+    recurrence_interval = fields.Integer(string='Recurrence Interval')
 
     def cron_recurring_billing_routine(self):
-        active_records = self.env['sale.subscription'].search([('stage','=','active')])
+        active_records = self.env['billing.subscription'].search([('stage','=','active')])
 
         for record in active_records: 
             self.env['account.move'].create({

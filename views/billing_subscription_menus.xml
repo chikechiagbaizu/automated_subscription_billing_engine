@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <menuitem id="billing_subscription_root_menu" name="Billing Subscription" sequence="1" />
+        <menuitem id="billing_subscription_sub_menu" name="Billing Subscription" sequence="1"
+            parent="billing_subscription_root_menu" action="billing_subcription_action" />
+    </data>
+</odoo>

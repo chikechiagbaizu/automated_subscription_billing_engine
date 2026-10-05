@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="billing_subcription_action" model="ir.actions.act_window">
+            <field name="name">Billing Subscription</field>
+            <field name="res_model">billing.subscription</field>
+            <field name="view_mode">list,form,graph,pivot</field>
+        </record>
+    </data>
+</odoo>

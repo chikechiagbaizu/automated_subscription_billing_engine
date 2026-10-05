@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <pivot string="Subscription Analysis" sample="1">
                     <field name="partner_id" type="row" />
-                    <field name="date_start" type="col" />
+                    <field name="start_date" type="col" />
                     <field name="recurring_amount" type="measure" />
                 </pivot>
             </field>

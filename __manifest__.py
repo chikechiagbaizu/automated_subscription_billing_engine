@@ -13,9 +13,15 @@
         'sale',
     ],
     'data': [
+        'data/ir_cron_subscription_billing_worker.xml',
+        'data/ir_sequence_billing_subscription.xml',
         'security/billing_subscription_groups.xml',
         'security/ir.model.access.csv',
+        'views/billing_subscription_actions.xml',
+        'views/view_billing_subscription_form.xml',
+        'views/view_billing_subscription_list.xml',
         'views/view_billing_subscription_pivot.xml',
         'views/view_billing_subscription_graph.xml',
+        'views/billing_subscription_menus.xml',
     ],
 }

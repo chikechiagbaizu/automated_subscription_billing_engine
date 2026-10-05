@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="billing_subscription_form_view" model="ir.ui.view">
+            <field name="name">billing.subscription.form.view</field>
+            <field name="model">billing.subscription</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_active" string="Active" type="object"
+                            class="btn-primary" />
+                        <button name="action_closed" string="Close" type="object"
+                            class="btn-secondary" />
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="name" />
+                            <field name="partner_id" />
+                            <field name="currency_id" />
+                            <field name="recurring_amount" />
+                            <field name="start_date" />
+                            <field name="stage" readonly="1" />
+                            <field name="next_invoice_date" readonly="1" />
+                            <field name="recurrence" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

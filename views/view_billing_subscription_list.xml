@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="billing_subscription_list_view" model="ir.ui.view">
+            <field name="name">billing.subscription.list.view</field>
+            <field name="model">billing.subscription</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name" />
+                    <field name="partner_id" />
+                    <field name="currency_id" />
+                    <field name="recurring_amount" />
+                    <field name="start_date" />
+                    <field name="stage" />
+                    <field name="next_invoice_date" />
+                    <field name="recurrence" />
+                </list>
+            </field>
+        </record>
+    </data>
+</odoo>

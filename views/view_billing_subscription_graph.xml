@@ -7,7 +7,7 @@
             <field name="model">billing.subscription</field>
             <field name="arch" type="xml">
                 <graph string="Subscription Trends" type="line" sample="1">
-                    <field name="date_start" type="row" />
+                    <field name="start_date" type="row" />
                     <field name="recurring_amount" type="measure" />
                 </graph>
             </field>

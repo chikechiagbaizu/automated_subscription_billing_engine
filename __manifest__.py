@@ -1,16 +1,24 @@
 {
     'name': 'Automated Subscription Billing Engine',
-    'summary': 'Automated Subscription Billing Engine',
-    'author': 'Chike Chiagbaizu',
+    'summary': 'Recurring customer invoicing from subscriptions via an idempotent cron.',
+    'description': """
+    Automated Subscription Billing Engine
+    =====================================
+    Creates recurring customer invoices from subscription records.
+    A scheduled action bills only subscriptions that are due and then
+    advances the next invoice date, so repeated runs never bill the same
+    period twice. Supports monthly and yearly recurrence, catch-up billing
+    for missed runs, and month-end date handling.
+    """,
     'maintainer': 'Chike Chiagbaizu',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'license': 'LGPL-3',
     'sequence': 1,
     'application': True,
     'installable': True,
     'depends': [
         'base',
-        'sale',
+        'account',
     ],
     'data': [
         'data/ir_cron_subscription_billing_worker.xml',

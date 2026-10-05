@@ -1,63 +1,94 @@
-# Project 4: Automated Subscription Billing Engine & BI Dashboard 🗓️📊
+# Automated Subscription Billing Engine
 
-An enterprise cloud automation application providing automated background invoice generation routines and multidimensional analytical visual tools for high-volume subscription ecosystems.
+An Odoo 19 module that generates recurring customer invoices from simple
+subscription records. A scheduled action (cron) finds subscriptions that are
+due, creates the invoice, and moves the next billing date forward, so running
+the job twice never bills the same period twice.
 
-## 📋 Business Case & Problem Statement
-SaaS platforms and recurring business groups face structural financial bottlenecks when scaling transaction numbers. Relying on manually tracking contracts leads to massive delays in cash collections, breaks data integrity, and leaves executive boards completely blind to long-term monthly recurring revenue (MRR) trends.
+> **Status:** work in progress. The core subscription model and idempotent
+> billing cron are implemented. Items marked *Planned* below are not built yet.
 
-**The Solution:** This app introduces an automated background scheduling worker (`ir.cron`) paired with high-performance Business Intelligence (BI) view components. At midnight every single day, the background processing thread scans database states natively, extracts parameters, and auto-generates draft customer invoice ledgers without administrative interaction. Simultaneously, custom multi-dimensional pivot matrix configurations give business directors real-time visual trend lines for financial reporting.
+## What it does today
 
----
+- **`billing.subscription` model** with customer, recurring amount, currency,
+  start date, recurrence (monthly or yearly), stage, and next invoice date.
+- **Stage workflow:** `draft -> active -> closed`, with guarded transitions.
+  Only a draft can be activated, and only an active subscription can be closed.
+  Closed subscriptions cannot be reactivated.
+- **Idempotent billing cron:** each run bills only active subscriptions whose
+  `next_invoice_date` is today or earlier, then advances that date. A second
+  run immediately afterwards creates nothing.
+- **Catch-up billing:** if the cron missed days, it creates one invoice per
+  missed period, never beyond today.
+- **Safe activation:** a draft activated after its start date begins billing
+  from today, so no backlog is billed.
+- **Month-end handling:** a subscription starting on the 31st is billed on the
+  last day of shorter months and returns to the 31st afterwards
+  (31 Jan -> 28 Feb -> 31 Mar -> 30 Apr).
+- **Validation:** the recurring amount must be greater than zero, and the start
+  date cannot be in the past.
+- `stage` and `next_invoice_date` are read-only so they are changed only
+  through the workflow methods.
 
-## 🛠️ Key Technical Implementations
-* **Optimized High-Speed Aggregations:** Integrated native database-level group processing using Odoo’s `read_group()` tool. This layer executes optimized `GROUP BY` routines directly inside PostgreSQL, completely bypassing the memory bottlenecks of the standard Python recordset loops.
-* **Modern Headless Task Automation:** Built a daily background cron worker framework optimized for modern specifications (Odoo 18.0+ / 19.0 paradigm constraints). The configuration automates long-running execution workers securely by removing obsolete parameter structures like `numbercall`.
-* **Multidimensional Data Cube Visualizations:** Implemented cross-dimensional reporting architectures utilizing clean XML layout components (`<pivot>` and `<graph type="line">`), allowing real-time column grouping aggregations on live screens.
-* **Atomic ORM Record Operations:** Engineered batch-safe row loop structures implementing clean database instantiations (`.create()`) combined with nested `Command.create()` tuple parameters to protect financial record histories.
+## How billing works
 
----
+1. Create a subscription (draft) and activate it. `next_invoice_date` is set
+   to the start date, or to today if the start date has passed.
+2. The cron `cron_recurring_billing_routine` searches for subscriptions with
+   `stage = active` and `next_invoice_date <= today`.
+3. For each one it creates and posts a customer invoice, then sets
+   `next_invoice_date` to the next period, keeping the original billing day.
+4. The loop repeats for that subscription until its next date is in the
+   future, then moves to the next subscription.
 
-## 🗂️ Module Directory Structure
-```text
-subscription_billing_engine/
-├── __manifest__.py                  # Package descriptor configuration
-├── __init__.py                      # Initializer configurations
-├── data/
-│   └── ir_cron_data.xml             # Automated cron background task scheduler configuration
-├── models/
-│   ├── __init__.py
-│   └── sale_subscription.py         # Core subscription data tracking and cron logic models
-└── views/
-    └── subscription_bi_views.xml    # BI Pivot Grid and line trend chart dashboard configurations
+## Requirements
+
+- Odoo 19.0
+- Depends on the `account` module
+
+## Installation
+
+1. Place the module folder in your Odoo addons path. The folder name must match
+   the technical name `automated_subscription_billing_engine`.
+2. Restart Odoo and update the apps list.
+3. Install **Automated Subscription Billing Engine**.
+
+## Planned
+
+These are not implemented yet:
+
+- **Complete invoice lines:** product, taxes, income account, and an invoice
+  date set to the period being billed (currently catch-up invoices are all
+  dated on the day the cron runs).
+- **Duplicate guard:** link each invoice to its subscription and billing
+  period, with a database-level uniqueness check.
+- **Failure isolation:** process each subscription in its own savepoint and in
+  batches, so one bad record cannot roll back the whole run.
+- **Security:** access groups and `ir.model.access.csv` for users and managers.
+- **Views and menus:** form, list, and buttons for activate/close.
+- **Automated tests** (`TransactionCase`) covering: invoice created when due,
+  not created when not due, not created twice, date advanced correctly,
+  month-end behaviour, and failure isolation.
+
+## Known limitations
+
+- The cron currently runs in a single transaction. One failing subscription
+  rolls back the whole run until failure isolation is added.
+- "Today" is calculated from the context time zone, so the UI and the cron user
+  can disagree on the date around midnight.
+- Only monthly and yearly recurrence is supported, with no custom interval.
+- Invoices are posted automatically; there is no draft-review option yet.
+
+## Project layout
+
+```
+automated_subscription_billing_engine/
+├── __manifest__.py
+├── data/          # scheduled action (cron)
+├── models/        # billing.subscription
+└── views/         # to be added
 ```
 
----
+## License
 
-## 🔩 Technical Specifications & Code Snippets
-
-### Automated Daily Invoicing Worker Lifecycle Routine (Python)
-```python
-def cron_recurring_billing_routine(self):
-    active_records = self.env['sale.subscription'].search([('stage', '=', 'active')])
-    for record in active_records:
-        self.env['account.move'].create({
-            'partner_id': record.partner_id.id,
-            'move_type': 'out_invoice',
-            'invoice_line_ids': [
-                Command.create({
-                    'name': f"Automated Recurring Renewal Invoice for Contract Ref: {record.name}",
-                    'quantity': 1.0,
-                    'price_unit': record.recurring_amount
-                })
-            ]
-        })
-```
-
-### Business Intelligence Grid Manifest (XML Pivot)
-```xml
-<pivot string="Subscription Analysis" sample="1">
-    <field name="partner_id" type="row" />
-    <field name="date_start" type="col" />
-    <field name="recurring_amount" type="measure" />
-</pivot>
-```
+LGPL-3
